@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String           @id @default(uuid())
+  name           String
+  password       String
+  email          String           @unique
+  jobTitle       String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  epics          Epic[]
+  tasks          Task[]
+  projects       Project[]
+  projectMembers Project_Member[]
+}
+
+model Page {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  ownerId     String
+
+  owner          User             @relation(fields: [ownerId], references: [id])
+  epics          Epic[]
+  tasks          Task[]
+  projectMembers Project_Member[]
+}
+
+model Project_Member {
+  id        String @id @default(uuid())
+  userId    String
+  projectId String
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+}
+
+model Epic {
+  id          String    @id @default(uuid())
+  title       String    @unique
+  description String?
+  assigneeId  String?
+  projectId   String
+  deadline    DateTime?
+
+  assignee User?   @relation(fields: [assigneeId], references: [id])
+  project  Project @relation(fields: [projectId], references: [id])
+  tasks    Task[]
+}
+
+model Task {
+  id          String      @id @default(uuid())
+  title       String      @unique
+  description String?
+  assigneeId  String?
+  projectId   String
+  epicId      String?
+  dueDate     DateTime?
+  status      TaskStatus?
+
+  project  Project @relation(fields: [projectId], references: [id])
+  epic     Epic?   @relation(fields: [epicId], references: [id])
+  assignee User?   @relation(fields: [assigneeId], references: [id])
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
