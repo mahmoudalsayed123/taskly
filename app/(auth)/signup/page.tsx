@@ -1,7 +1,7 @@
 import Logo from '@/components/Logo';
 import MainHeading from '../_components/MainHeading';
-import Link from 'next/link';
 import FormSignUp from '../_components/FormSignUp';
+import { Suspense } from 'react';
 
 const Signup = () => {
   return (
@@ -14,7 +14,9 @@ const Signup = () => {
             title="Join the editorial approach to task management."
             resetSection={false}
           />
-          <FormSignUp />
+          <Suspense fallback={<div>Loading...</div>}>
+            <FormSignUp />
+          </Suspense>
         </div>
       </div>
     </section>
