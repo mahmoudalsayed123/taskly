@@ -2,7 +2,11 @@ import MainHeadingSection from '../../../_components/MainHeadingSection';
 import FormNewTask from '../_components/FormNewTask';
 import { prisma } from '@/prisma';
 
-const NewTask = async ({ params }: { params: { projectId: string } }) => {
+const NewTask = async ({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}) => {
   const { projectId } = await params;
   // All members in projects { admin and members }
   const members = await prisma.user.findMany({

@@ -7,7 +7,11 @@ import InviteDialogLg from '../../_components/InviteDialogLg';
 import InviteDrawerSm from '../../_components/InviteDrawerSm';
 import { prisma } from '@/prisma';
 
-const Members = async ({ params }: { params: { projectId: string } }) => {
+const Members = async ({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}) => {
   const { projectId } = await params;
 
   const projectName = await prisma.project.findUnique({
@@ -24,8 +28,6 @@ const Members = async ({ params }: { params: { projectId: string } }) => {
       projectMembers: { some: { projectId: projectId } },
     },
   });
-
-  
 
   const memberRole = await prisma.project_Member.findMany({
     where: {

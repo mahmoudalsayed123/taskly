@@ -13,7 +13,7 @@ import { pagination } from '@/lib/pagination';
 const Project = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page: string }>;
 }) => {
   const user = await getCurrentUser();
   if (!user) {

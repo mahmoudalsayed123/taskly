@@ -1,21 +1,20 @@
+import { Role } from '@/app/generated/prisma/enums';
 import MainHeadingSection from '../../../../_components/MainHeadingSection';
 import FormUpdateEpic from '../../_components/FormUpdateEpic';
 import { prisma } from '@/prisma';
-import { Role } from '@/app/generated/prisma/client';
 
-const UpdateEpic = async ({ params }: { params: { epicId: string } }) => {
+
+const UpdateEpic = async ({
+  params,
+}: {
+  params: Promise<{ epicId: string; projectId: string }>;
+}) => {
   const { epicId } = await params;
   const epic = await prisma.epic.findUnique({
     where: {
       id: epicId,
     },
   });
-
-  // const userCreatedEpic = await prisma.user.findUnique({
-  //   where: {
-  //     id: epic?.createdById,
-  //   },
-  // });
 
   const assignedUser = epic?.assigneeId
     ? await prisma.user.findUnique({

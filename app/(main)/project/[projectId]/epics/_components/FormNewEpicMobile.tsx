@@ -1,7 +1,57 @@
+'use client';
+import { useState } from 'react';
 import { SelectAssignee } from '../../../_components/SelectAssignee';
 import { DatePicker } from '@/components/ui/DatePicker';
+import { User } from '@/app/generated/prisma/client';
+import { usePathname } from 'next/navigation';
+import { toast } from 'sonner';
 
-const FormNewEpicMobile = () => {
+const FormNewEpicMobile = ({
+  user,
+  members,
+}: {
+  user: User | null;
+  members: User[];
+}) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [assigneeId, setAssigneeId] = useState('');
+  const [deadline, setDeadline] = useState<Date | undefined>(undefined);
+  const pathName = usePathname();
+  const projectId = pathName.split('/')[2];
+
+  async function handelAddNewEpic() {
+    if (!title || !description || !assigneeId || !deadline) {
+      toast.error('All fields are required');
+      return;
+    }
+    try {
+      const res = await fetch('/api/epic', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          deadline,
+          projectId: projectId!,
+          createdById: user?.id,
+          assigneeId: assigneeId,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        console.log(data);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log((error as Error).message);
+      toast.error((error as Error).message);
+    }
+  }
   return (
     <div className=" flex md:hidden flex-col items-start gap-10 w-full mt-6 ">
       {/* Epic Title */}
@@ -42,14 +92,18 @@ this epic..."
           <label htmlFor="assignee" className="label">
             Assignee
           </label>
-          <SelectAssignee />
+          <SelectAssignee
+            members={members}
+            onAssigneeChange={setAssigneeId}
+            assigneeId={assigneeId}
+          />
         </div>
         {/* Deadline */}
         <div className="relative w-full">
           <label htmlFor="deadline" className="label">
             Deadline
           </label>
-          <DatePicker />
+          <DatePicker dueDate={deadline} setDueDate={setDeadline} />
         </div>
       </div>
       {/* Button CreateEpic + Cancel */}

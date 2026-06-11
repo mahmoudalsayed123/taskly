@@ -13,7 +13,7 @@ const Epics = async ({
   params,
   searchParams,
 }: {
-  params: { projectId: string };
+  params: Promise<{ projectId: string }>;
   searchParams: Promise<{ page?: string }>;
 }) => {
   const { projectId } = await params;

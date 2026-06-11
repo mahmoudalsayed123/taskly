@@ -6,7 +6,11 @@ import { getCurrentUser } from '@/lib/getCurrentUser';
 import { prisma } from '@/prisma';
 import { Role } from '@/app/generated/prisma/enums';
 
-const NewEpicPage = async ({ params }: { params: { projectId: string } }) => {
+const NewEpicPage = async ({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}) => {
   const { projectId } = await params;
   const user = await getCurrentUser();
 
@@ -30,7 +34,7 @@ const NewEpicPage = async ({ params }: { params: { projectId: string } }) => {
         />
       </div>
       {/* Form in Mobile */}
-      <FormNewEpicMobile />
+      <FormNewEpicMobile user={user} members={members} />
       {/* Form in Desktop */}
       <FromNewEpicDesktop user={user} members={members} />
     </section>

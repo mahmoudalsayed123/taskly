@@ -37,8 +37,8 @@ const Tasks = async ({
   params,
   searchParams,
 }: {
-  params: { projectId: string };
-  searchParams: { view?: string };
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ view?: string }>;
 }) => {
   const { projectId } = await params;
   const { view = 'board' } = await searchParams;
@@ -142,9 +142,9 @@ const Tasks = async ({
         </div>
 
         {/* TASKS LIST */}
-          {tasks.map((task) => (
-            <TaskDetailsDrawer key={task.id} task={task} />
-          ))}
+        {tasks.map((task) => (
+          <TaskDetailsDrawer key={task.id} task={task} />
+        ))}
       </section>
     </>
   );
