@@ -1,22 +1,28 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
+import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value;
 
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', req.url));
+  const { pathname, search } = req.nextUrl;
+
+  const protectedRoutes = ['/project', '/invite'];
+
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  // حماية الصفحات
+  if (!token && isProtectedRoute) {
+    const authUrl = new URL('/signup', req.url);
+
+    authUrl.searchParams.set('redirect', pathname + search);
+
+    return NextResponse.redirect(authUrl);
   }
 
-  try {
-    jwt.verify(token, process.env.JWT_SECRET as string);
-    return NextResponse.next();
-  } catch (err) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'], // الصفحات المحمية
+  matcher: ['/project/:path*', '/invite/:path*'],
 };

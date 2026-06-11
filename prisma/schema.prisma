@@ -13,49 +13,61 @@ datasource db {
 }
 
 model User {
-  id             String           @id @default(uuid())
-  name           String
-  password       String
-  email          String           @unique
-  jobTitle       String
+  id       String @id @default(uuid())
+  name     String
+  password String
+  email    String @unique
+  jobTitle String
+
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt @map("updated_at")
-  epics          Epic[]
-  tasks          Task[]
-  projects       Project[]
+  createdEpics   Epic[]           @relation("CreatedBy")
+  assignedEpics  Epic[]           @relation("AssignedTo")
   projectMembers Project_Member[]
+  rePorterTasks  Task[]           @relation("RePorter")
+  assigneeTasks  Task[]           @relation("Assignee")
 }
 
-model Page {
-  id          String  @id @default(uuid())
-  name        String  @unique
+model Project {
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
   ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  owner          User             @relation(fields: [ownerId], references: [id])
   epics          Epic[]
-  tasks          Task[]
   projectMembers Project_Member[]
+  tasks          Task[]
 }
 
+// العضويه
 model Project_Member {
-  id        String @id @default(uuid())
+  id        String  @id @default(uuid())
   userId    String
   projectId String
+  role      Role    @default(MEMBER)
+  user      User    @relation(fields: [userId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
 
-  user    User    @relation(fields: [userId], references: [id])
-  project Project @relation(fields: [projectId], references: [id])
+  @@unique([userId, projectId])
 }
 
 model Epic {
   id          String    @id @default(uuid())
   title       String    @unique
   description String?
+  createdById String
   assigneeId  String?
   projectId   String
   deadline    DateTime?
 
-  assignee User?   @relation(fields: [assigneeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  createdBy User @relation("CreatedBy", fields: [createdById], references: [id])
+
+  assignee User?   @relation("AssignedTo", fields: [assigneeId], references: [id])
   project  Project @relation(fields: [projectId], references: [id])
   tasks    Task[]
 }
@@ -65,18 +77,32 @@ model Task {
   title       String      @unique
   description String?
   assigneeId  String?
+  rePorterId  String?
   projectId   String
   epicId      String?
   dueDate     DateTime?
   status      TaskStatus?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
   project  Project @relation(fields: [projectId], references: [id])
   epic     Epic?   @relation(fields: [epicId], references: [id])
-  assignee User?   @relation(fields: [assigneeId], references: [id])
+  assignee User?   @relation("Assignee", fields: [assigneeId], references: [id])
+  rePorter User?   @relation("RePorter", fields: [rePorterId], references: [id])
 }
 
 enum TaskStatus {
-  TODO
+  TO_DO
   IN_PROGRESS
+  BLOCKED
+  IN_REVIEW
+  READY_FOR_QA
+  REOPENED
+  READY_FOR_PRODUCTION
   DONE
+}
+
+enum Role {
+  ADMIN
+  MEMBER
 }

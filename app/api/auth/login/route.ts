@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET!,
-      { expiresIn: '1h' },
+      { expiresIn: '7d' },
     );
 
     const response = NextResponse.json({
@@ -31,9 +31,9 @@ export async function POST(req: Request) {
 
     response.cookies.set('token', token, {
       httpOnly: true,
-      secure: true,
       sameSite: 'strict',
       path: '/',
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;

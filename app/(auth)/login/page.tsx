@@ -1,9 +1,11 @@
-import React from 'react';
 import MainHeading from '../_components/MainHeading';
 import Logo from '@/components/Logo';
 import FormLogin from '@/app/(auth)/_components/FormLogin';
+import { cookies } from 'next/headers';
 
-const Login = () => {
+const Login = async () => {
+  const cookie = await cookies();
+  const token = cookie.get('token')?.value;
   return (
     <section className="md:max-h-screen md:mt-[80px]">
       <Logo />
@@ -20,7 +22,7 @@ const Login = () => {
               resetSection={false}
             />
           </div>
-          <FormLogin />
+          <FormLogin token={token || ''} />
           {/* remember me */}
           <div className="w-full flex items-center gap-3 px-1 pb-4 ">
             <input

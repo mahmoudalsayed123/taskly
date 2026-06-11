@@ -1,31 +1,83 @@
 'use client';
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
-const FormLogin = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+const FormLogin = ({ token }: { token: string | null }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // redirect path
+  const redirect = searchParams.get('redirect');
+  useEffect(() => {
+    async function handleCheckMember() {
+      // الحالة الأولى
+      if (redirect && token && redirect.startsWith('/invite')) {
+        const url = new URL(redirect, window.location.origin);
+
+        const inviteToken = url.searchParams.get('token');
+
+        if (inviteToken) {
+          const decoded = jwtDecode(inviteToken) as {
+            projectId: string;
+          };
+
+          const res = await fetch('/api/project/check-member', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              projectId: decoded.projectId,
+            }),
+          });
+
+          const data = await res.json();
+
+          // لو member بالفعل
+          if (data.isMember) {
+            router.push(`/project/${decoded.projectId}/epics`);
+            return;
+          }
+
+          // لو مش member
+          router.push(`/invite?token=${inviteToken}`);
+          return;
+        }
+      } else if (redirect && !token) {
+        toast.error('You need to login to access this page');
+      } else if (!redirect && !token) {
+        // الحالة الثانية
+        toast.error('You need to login to access this page');
+        router.push('/login');
+      }
+    }
+    handleCheckMember();
+  }, []);
 
   async function handleSubmit() {
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
-      if (!res.ok) throw new Error('Failed to login');
-      const data = await res.json();
-      console.log(data);
-    } catch (e) {
-      console.log('message Error', e);
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error);
+      return;
     }
+    router.push('/project');
   }
   return (
     <>

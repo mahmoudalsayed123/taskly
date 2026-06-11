@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -11,7 +11,7 @@
   --color-primary-container: #0052cc;
 
   /* ===== Surface ===== */
-  --color-surface-highest: #d7e2ff;
+  --color-surface-highest: #dAe2ff;
   --color-surface-low: #4f5f7b;
   --color-background: #f9f9ff;
 
@@ -19,15 +19,16 @@
   --color-slate-dark: #041b3c;
   --color-slate-medium: #4f5f7b;
   --color-slate-light: #c3c6d6;
+  --color-head-table: #e0e8ff;
   --color-resend-container: #f1f3ff;
   --color-muted-body: #434654;
 
   /* ===== Semantic ===== */
-  --color-success: #74d3a7;
-  --color-success-text: #005235;
-  --color-success-light: #82f9be33;
-  --color-error: #c61b1b;
-  --color-warning: #f4a300;
+  /* --color-success: #74d3a7;
+  --color-success-text: #005235; */
+  --color-success: #82f9be;
+  --color-error: #ba1a1a;
+  --color-warning: #ffb300;
   --color-invalid: #ffdad6;
 
   /* ===== Text ===== */
@@ -36,6 +37,18 @@
   --text-title: 18px;
   --text-body: 14px;
   --text-label: 11px;
+}
+
+.section {
+  @apply col-span-6 flex flex-col items-center gap-5 md:ms-[198px] p-6 md:p-8 mt-[64px] bg-[#f9f9ff] h-[calc(100vh-64px)];
+}
+
+.section_card {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7;
+}
+
+.section_skeleton {
+  @apply col-span-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-7 md:ms-[210px] p-6 md:p-8 mt-[64px] bg-[#f9f9ff];
 }
 
 .title-logo {
@@ -47,11 +60,11 @@
 }
 
 .btn-primary {
-  @apply px-6 py-2.5 rounded-lg bg-primary text-white;
+  @apply px-6 py-2.5 rounded-md cursor-pointer bg-primary-container text-white;
 }
 
 .btn-secondary {
-  @apply px-6 py-2.5 rounded-lg bg-background text-primary font-semibold;
+  @apply px-6 py-2.5 rounded-md bg-background text-primary font-semibold;
 }
 
 .btn-action {
@@ -59,7 +72,7 @@
 }
 
 .label {
-  @apply absolute top-[-21px] left-1 w-full  text-label font-bold uppercase text-slate-medium;
+  @apply absolute top-[-21px] left-1 w-full text-label font-bold uppercase text-slate-medium;
 }
 
 .label-error {
@@ -67,7 +80,7 @@
 }
 
 .input-mobile {
-  @apply w-full h-[56px] md:h-[48px] md:py-3.5 md:px-4 outline-none border-none px-4 py-4.5 text-[16px] rounded-sm bg-surface-highest text-slate-medium;
+  @apply w-full h-[56px] md:h-[48px] md:py-3.5 md:px-4 outline-none border-none px-4.5 py-4 text-[16px] rounded-sm bg-surface-highest text-slate-medium;
 }
 /* .input-desktop {
   @apply w-full md:h-[48px] outline-none border-none md:px-4 md:py-3.5 text-[16px] rounded-sm bg-surface-highest text-slate-medium;
@@ -76,7 +89,22 @@
 .input-error {
   @apply px-4 py-3.5 text-[16px] rounded-sm bg-invalid text-slate-medium;
 }
+.board-scroll::-webkit-scrollbar {
+  height: 8px;
+}
 
+.board-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.board-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);

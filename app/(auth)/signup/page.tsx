@@ -3,8 +3,7 @@ import MainHeading from '../_components/MainHeading';
 import Link from 'next/link';
 import FormSignUp from '../_components/FormSignUp';
 
-const Signup = async () => {
-  // const user = await prisma.user.deleteMany();
+const Signup = () => {
   return (
     <section className="md:max-h-screen md:mt-[80px]">
       <Logo />
@@ -16,15 +15,6 @@ const Signup = async () => {
             resetSection={false}
           />
           <FormSignUp />
-          {/* Footer */}
-          <div className="px-8 py-[47.5px] md:w-full md:px-0 md:pt-8 md:pb-0">
-            <p className="text-center text-body font-semibold text-slate-medium">
-              Already have an account?{' '}
-              <Link href="/login" className="text-primary text-body">
-                Log in
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </section>
