@@ -2,6 +2,7 @@ import MainHeading from '../_components/MainHeading';
 import Logo from '@/components/Logo';
 import FormLogin from '@/app/(auth)/_components/FormLogin';
 import { cookies } from 'next/headers';
+import { Suspense } from 'react';
 
 const Login = async () => {
   const cookie = await cookies();
@@ -22,7 +23,9 @@ const Login = async () => {
               resetSection={false}
             />
           </div>
-          <FormLogin token={token || ''} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <FormLogin token={token || ''} />
+          </Suspense>
           {/* remember me */}
           <div className="w-full flex items-center gap-3 px-1 pb-4 ">
             <input

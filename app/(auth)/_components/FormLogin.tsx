@@ -113,12 +113,6 @@ const FormLogin = ({ token }: { token: string | null }) => {
             >
               Password
             </label>
-            <Link
-              href="/forgot-password"
-              className="text-label text-primary font-semibold"
-            >
-              Forgot?
-            </Link>
           </div>
           <div className="relative w-full">
             <input
