@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       html: `   
 <button>
       <a
-        href="http://localhost:3000/invite?token=${inviteToken}"
+        href="https://taskly-theta-eight.vercel.app/invite?token=${inviteToken}"
         style="
           display:inline-block;
           background:#4f46e5;
