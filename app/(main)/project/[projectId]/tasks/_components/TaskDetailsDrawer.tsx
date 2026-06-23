@@ -38,14 +38,14 @@ const TaskDetailsDrawer = async ({ task }: { task: Task }) => {
   return (
     <div className="flex flex-wrap gap-2 max-w-[448px]  shadow-[0px_-4px_24px_0px_rgba(4,27,60,0.06)]">
       <Drawer direction="bottom">
-        <DrawerTrigger className="w-full">
+        <DrawerTrigger className="w-full ">
           <TaskCard task={task} />
         </DrawerTrigger>
-        <DrawerContent className="px-5 pb-10">
+        <DrawerContent className="px-5 pb-10 md:hidden block!">
           <DrawerHeader>
             <DrawerTitle className=" flex flex-col gap-1 pt-5">
               <div className="flex flex-col items-start gap-1">
-                <p className="md:hidden text-label font-bold text-slate-medium">
+                <p className="text-label font-bold text-slate-medium">
                   {`Task-${task.id.slice(0, 3).toUpperCase()}`}
                 </p>
                 <div className="flex flex-col items-start gap-4">

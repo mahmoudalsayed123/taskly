@@ -8,14 +8,14 @@ const BtnNewTask = () => {
   const { projectId } = params as { projectId: string };
   return (
     <Link href={`/project/${projectId}/tasks/new`}>
-      <button className="w-full h-[36px] px-6 py-3 items-center justify-center gap-2 rounded-sm bg-primary-container text-white font-bold cursor-pointer flex md:hidden ">
+      <button className="w-full h-[36px] px-6 py-3 flex md:flex-1 items-center justify-center gap-1 rounded-sm bg-primary-container text-white font-bold cursor-pointer ">
         <Image
           src="/assets/icons/plus.svg"
           alt="plus"
           width={10.5}
           height={10.5}
         />
-        <span className="lg:text-body md:text-body font-medium">New Epic</span>
+        <span className="lg:text-body md:text-body font-medium">New Task</span>
       </button>
     </Link>
   );

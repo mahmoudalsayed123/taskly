@@ -16,7 +16,7 @@ const SelectViewTasks = ({ projectId }: { projectId: string }) => {
   const view = searchParams.get('view') || 'board';
   return (
     <Select defaultValue={view}>
-      <SelectTrigger className="bg-white rounded-md min-w-[150px]! min-h-[38px]!">
+      <SelectTrigger className="bg-white rounded-md min-w-[140px]! lg:w-full xl:min-w-[140px] min-h-[38px]!">
         <div className="flex items-center gap-4">
           {' '}
           {/* <Image

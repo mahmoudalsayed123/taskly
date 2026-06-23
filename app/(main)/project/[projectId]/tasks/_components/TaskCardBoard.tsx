@@ -13,7 +13,7 @@ const TaskCardBoard = async ({ task }: { task: Task }) => {
       )?.name
     : null;
   return (
-    <div className="w-full h-[133px] flex flex-col justify-between gap-4 shadow-[0px_2px_8px_0px_#00000005]  rounded-lg border border-slate-light p-4 cursor-pointer ">
+    <div className="w-full h-[133px] flex flex-col justify-between gap-4 shadow-[0px_2px_8px_0px_#00000005]  rounded-lg border bg-white p-4 cursor-pointer ">
       <h3 className="font-medium text-body text-slate-dark text-left">
         {task.title}
       </h3>

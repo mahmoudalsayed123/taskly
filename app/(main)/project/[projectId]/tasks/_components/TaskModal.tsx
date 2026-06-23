@@ -5,8 +5,17 @@ import { prisma } from '@/prisma';
 import Image from 'next/image';
 import { statusBackgroundColors } from '@/app/_constant';
 import { formatDate } from '@/lib/help';
+import TaskCardListVeiw from './TaskCardListVeiw';
 
-const TaskModal = async ({ task }: { task: Task }) => {
+const TaskModal = async ({
+  task,
+  view,
+  assigneeName,
+}: {
+  task: Task;
+  view: string;
+  assigneeName?: string;
+}) => {
   const epic = task.epicId
     ? await prisma.epic.findUnique({
         where: { id: task.epicId },
@@ -27,11 +36,18 @@ const TaskModal = async ({ task }: { task: Task }) => {
         select: { name: true },
       })
     : null;
-  
+
+  console.log('rePorter', task);
+
   return (
     <Dialog>
       <DialogTrigger className="w-full">
-        <TaskCardBoard task={task} />
+        {view === 'list' && (
+          <div className="h-[90px] w-full! relative">
+            <TaskCardListVeiw task={task} assigneeName={assigneeName} />
+          </div>
+        )}
+        {view === 'board' && <TaskCardBoard task={task} />}
       </DialogTrigger>
       <DialogContent className="flex items-start gap-0 min-w-[896px] rounded-lg shadow-[0px_25px_50px_-12px_#00000040]">
         {/* taskId, epicId, title, description, copy link */}
@@ -41,7 +57,7 @@ const TaskModal = async ({ task }: { task: Task }) => {
             <div className="flex flex-col gap-2">
               {/* taskId, epicId */}
               <div className="flex items-center gap-3">
-                <p className="py-0.5 px-2 rounded-xs bg-surface-highest">{`Task-${task.id.slice(0, 3).toUpperCase()}`}</p>
+                <p className="w-fit h-[20px] py-0.5 px-2 font-bold text-label rounded-xs text-primary-container bg-surface-highest">{`Task-${task.id.slice(0, 3).toUpperCase()}`}</p>
                 {epic && (
                   <p className="flex items-center gap-2">
                     <Image
@@ -103,7 +119,7 @@ const TaskModal = async ({ task }: { task: Task }) => {
           <div className="mt-6 flex flex-col gap-3">
             <p className="text-label font-bold text-muted-body">Assignee</p>
             <div className="flex items-center gap-3 rounded-xl p-2 bg-white shadow-[0px_1px_2px_0px_#0000000D]">
-              <p className="w-6 h-6 flex items-center justify-center rounded-full bg-surface-highest text-label font-bold">
+              <p className="w-6 h-6 flex items-center justify-center rounded-lg bg-surface-highest text-label font-bold">
                 {assignee?.name
                   .split(' ')
                   .map((word) => word[0][0].toUpperCase())}
@@ -122,7 +138,7 @@ const TaskModal = async ({ task }: { task: Task }) => {
           <div className="mt-6 flex flex-col gap-3">
             <p className="text-label font-bold text-muted-body">Reporter</p>
             <div className="flex justify-start items-center gap-3 p-2 ps-0">
-              <p className="w-6 h-6 flex items-center justify-center rounded-full bg-surface-highest text-label font-bold">
+              <p className="w-6 h-6 flex items-center justify-center rounded-lg bg-surface-highest text-label font-bold">
                 {rePorter?.name
                   .split(' ')
                   .map((word: string) => word[0][0].toUpperCase())}

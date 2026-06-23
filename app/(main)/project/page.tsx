@@ -72,7 +72,7 @@ const Project = async ({
         path="/project"
         totalPages={totalPages}
         currentPage={currentPage}
-        totalProjects={totalProjects}
+        totalItems={totalProjects}
         limit={limit}
       />
     </section>

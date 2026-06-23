@@ -1,34 +1,40 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
-import localFont from 'next/font/local';
+// import { Geist } from 'next/font/google';
+// import localFont from 'next/font/local';
 import '../globals.css';
 import SidebarDesktop from '@/app/(main)/_components/SidebarDesktop';
 import Header from './_components/Header';
 import { Toaster } from '@/components/ui/sonner';
 import { getCurrentUser } from '@/lib/getCurrentUser';
 import { redirect } from 'next/navigation';
+import { Josefin_Sans } from 'next/font/google';
 
 /* ===== Sans Font (زي ما هو) ===== */
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
+// const geistSans = Geist({
+//   variable: '--font-geist-sans',
+//   subsets: ['latin'],
+// });
 
-/* ===== Liberation Mono (Local) ===== */
-const liberationMono = localFont({
-  src: [
-    {
-      path: '../../public/fonts/LiberationMono-Regular.ttf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../../public/fonts/LiberationMono-Bold.ttf',
-      weight: '700',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-liberation-mono',
+// /* ===== Liberation Mono (Local) ===== */
+// const liberationMono = localFont({
+//   src: [
+//     {
+//       path: '../../public/fonts/LiberationMono-Regular.ttf',
+//       weight: '400',
+//       style: 'normal',
+//     },
+//     {
+//       path: '../../public/fonts/LiberationMono-Bold.ttf',
+//       weight: '700',
+//       style: 'normal',
+//     },
+//   ],
+//   variable: '--font-liberation-mono',
+//   display: 'swap',
+// });
+
+const josefine = Josefin_Sans({
+  subsets: ['latin'],
   display: 'swap',
 });
 
@@ -48,12 +54,9 @@ export default async function RootLayout({
     redirect('/signup');
   }
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${liberationMono.variable} h-full antialiased`}
-    >
+    <html lang="en">
       <body
-        className={`${geistSans.className} min-h-full bg-background grid grid-cols-6`}
+        className={`${josefine.className} min-h-full bg-background grid grid-cols-6`}
       >
         <SidebarDesktop />
         <Header user={user} />

@@ -12,7 +12,7 @@ const TaskCard = async ({ task }: { task: Task }) => {
   const lastLetter = assignee?.name.split(' ').pop()?.[0]?.toUpperCase() || '';
   const firstLetter = assignee?.name.split(' ')[0]?.[0]?.toUpperCase() || '';
   return (
-    <div className="flex flex-col gap-3 p-4 w-full  bg-white rounded-lg shadow-[0px_4px_24px_0px_#041B3C0A] mb-3 md:mb-0">
+    <div className="flex flex-col gap-3 p-4 w-full bg-white rounded-lg shadow-[0px_4px_24px_0px_#041B3C0A] mb-3 md:mb-0">
       {/* taskId, status, title */}
       <div className="flex flex-col gap-1">
         {/* status,taskId */}

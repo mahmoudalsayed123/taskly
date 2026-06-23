@@ -14,17 +14,19 @@ const FormNewTask = ({
   members,
   projectId,
   epics,
+  currentEpic,
 }: {
   members: User[];
   projectId: string;
   epics: Epic[];
+  currentEpic?: Epic;
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [assigneeId, setAssigneeId] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [status, setStatus] = useState('');
-  const [epicId, setEpicId] = useState('');
+  const [epicId, setEpicId] = useState(currentEpic?.id || '');
   const searchParams = useSearchParams();
   const currentTaskStatus = searchParams.get('status') || '';
   async function handelAddNewTask() {

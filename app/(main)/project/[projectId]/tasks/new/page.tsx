@@ -4,10 +4,13 @@ import { prisma } from '@/prisma';
 
 const NewTask = async ({
   params,
+  searchParams,
 }: {
   params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ epicId?: string }>;
 }) => {
   const { projectId } = await params;
+  const { epicId } = await searchParams;
   // All members in projects { admin and members }
   const members = await prisma.user.findMany({
     where: {
@@ -19,13 +22,22 @@ const NewTask = async ({
     },
   });
 
-  console.log(members);
   // Get all epics in current project
   const epics = await prisma.epic.findMany({
     where: {
       projectId: projectId,
     },
   });
+
+  //Get epic from epicId ( epicId => epic details popup )
+  const specificEpic = epicId
+    ? await prisma.epic.findUnique({
+        where: {
+          id: epicId,
+        },
+      })
+    : undefined;
+
   return (
     <section className="section">
       <div className=" w-full flex items-center">
@@ -39,7 +51,12 @@ const NewTask = async ({
         />
       </div>
       {/* Form Add new task */}
-      <FormNewTask members={members} projectId={projectId} epics={epics} />
+      <FormNewTask
+        members={members}
+        projectId={projectId}
+        epics={epics}
+        currentEpic={specificEpic || undefined}
+      />
     </section>
   );
 };

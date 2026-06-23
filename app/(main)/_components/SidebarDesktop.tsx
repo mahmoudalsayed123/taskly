@@ -3,13 +3,22 @@ import LogoDashboard from '@/components/LogoDashboard';
 import { NavList } from '@/app/_constant';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const SidebarDesktop = () => {
   const pathName = usePathname();
+  const router = useRouter();
   const lastPathSegment = pathName.split('/').pop();
   const projectId = pathName.split('/')[2];
   const checkPath = pathName.includes('/invite');
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', {
+      method: 'POST',
+    });
+
+    router.push('/login');
+  };
 
   return (
     <aside
@@ -70,7 +79,10 @@ const SidebarDesktop = () => {
               Collapse
             </span>
           </button>
-          <button className="flex items-center gap-3 cursor-pointer">
+          <button
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={handleLogout}
+          >
             <Image
               src="/assets/icons/logout.svg"
               alt="logout"

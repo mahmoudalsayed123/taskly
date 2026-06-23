@@ -1,5 +1,4 @@
 'use client';
-import { ITEMS_PER_PAGE } from '@/app/_constant';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -8,24 +7,46 @@ const Pagination = ({
   path,
   totalPages,
   currentPage,
-  totalProjects,
+  totalItems,
   limit,
+  search,
+  view,
 }: {
   pageName: string;
   path: string;
   totalPages: number;
   currentPage: number;
-  totalProjects: number;
+  totalItems: number;
   limit: number;
+  search?: string;
+  view?: string;
 }) => {
+  const buildUrl = (page: number) => {
+    const params = new URLSearchParams();
+
+    params.set('page', String(page));
+
+    if (search) {
+      params.set('search', search);
+    }
+
+    if (view) {
+      params.set('view', view);
+      if (view === 'board') {
+        params.delete('page');
+      }
+    }
+
+    return `${path}?${params.toString()}`;
+  };
   return (
     <div className="flex items-center justify-between w-full">
       <p className="text-label font-medium text-slate-medium">
-        Showing {limit} of {totalProjects} active {pageName}
+        Showing {limit} of {totalItems} active {pageName}
       </p>
       <div className="flex items-center gap-1">
         <Link
-          href={`${path}?page=${currentPage - 1}`}
+          href={buildUrl(currentPage - 1)}
           className={`w-8 h-8 flex items-center justify-center border border-slate-light text-slate-dark ${
             currentPage <= 1
               ? 'cursor-not-allowed pointer-events-none opacity-30'
@@ -42,7 +63,7 @@ const Pagination = ({
         </Link>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
           <Link
-            href={`${path}?page=${pageNum}`}
+            href={buildUrl(pageNum)}
             key={pageNum}
             className={`flex items-center justify-center w-8 h-8 text-label font-bold ${
               pageNum === currentPage
@@ -54,7 +75,7 @@ const Pagination = ({
           </Link>
         ))}
         <Link
-          href={`${path}?page=${currentPage + 1}`}
+          href={buildUrl(currentPage + 1)}
           className={`w-8 h-8 flex items-center justify-center border border-slate-light ${
             currentPage >= totalPages
               ? 'cursor-not-allowed pointer-events-none opacity-30'
