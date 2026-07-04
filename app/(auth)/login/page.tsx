@@ -1,12 +1,9 @@
 import MainHeading from '../_components/MainHeading';
 import Logo from '@/components/Logo';
 import FormLogin from '@/app/(auth)/_components/FormLogin';
-import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 
-const Login = async () => {
-  const cookie = await cookies();
-  const token = cookie.get('token')?.value;
+const Login = () => {
   return (
     <section className="md:max-h-screen md:mt-[80px]">
       <Logo />
@@ -24,7 +21,7 @@ const Login = async () => {
             />
           </div>
           <Suspense fallback={<div>Loading...</div>}>
-            <FormLogin token={token || ''} />
+            <FormLogin />
           </Suspense>
           {/* remember me */}
           <div className="w-full flex items-center gap-3 px-1 pb-4 ">

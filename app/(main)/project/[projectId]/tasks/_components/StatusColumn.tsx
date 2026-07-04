@@ -72,7 +72,12 @@ const StatusColumn = ({
 
       <div className="flex flex-col gap-2">
         {tasks.map((task) => (
-          <TaskModal key={task.id} task={task} view={'board'} />
+          <TaskModal
+            key={task.id}
+            task={task}
+            view={'board'}
+            projectId={projectId}
+          />
         ))}
       </div>
     </div>

@@ -16,16 +16,13 @@ const Project = async ({
   searchParams: Promise<{ page: string }>;
 }) => {
   const user = await getCurrentUser();
-  if (!user) {
-    redirect('/signup');
-  }
 
   const { page } = await searchParams;
 
   const { currentPage, limit, skip } = await pagination(page);
 
   const projects = await prisma.project.findMany({
-    where: { projectMembers: { some: { userId: user.id } } },
+    where: { projectMembers: { some: { userId: user?.id } } },
     take: limit,
     skip,
     orderBy: { createdAt: 'asc' },
@@ -55,8 +52,8 @@ const Project = async ({
         {projects?.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
-        <Link href={'/project/new'}>
-          <button className="md:hidden w-fit p-4 flex items-center justify-center absolute bottom-[20px] right-0 text-white bg-primary-container rounded-[12px] cursor-pointer">
+        <Link href={'/project/new'} className="md:hidden">
+          <button className=" w-fit p-4 flex items-center justify-center absolute bottom-[20px] right-0 text-white bg-primary-container rounded-[12px] cursor-pointer">
             <Image
               src="/assets/icons/plus.svg"
               alt="plus"

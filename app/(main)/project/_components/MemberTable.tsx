@@ -39,7 +39,7 @@ const MemberTable = ({
       </TableHeader>
       <TableBody>
         {members.map((member) => (
-          <TableRow className="bg-white h-[90px]">
+          <TableRow key={member.id} className="bg-white h-[90px]">
             <TableCell>
               {/* user image and name and role */}
               <div className="flex items-center gap-4 ms-5">

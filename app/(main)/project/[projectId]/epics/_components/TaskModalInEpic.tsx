@@ -1,36 +1,24 @@
+import { Task } from '@/app/generated/prisma/client';
+import TaskCardInEpic from './TaskCardInEpic';
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import TaskCardBoard from './TaskCardBoard';
-import { Task } from '@/app/generated/prisma/client';
-import { prisma } from '@/prisma';
+import { Epic } from '@/app/generated/prisma/client';
 import Image from 'next/image';
-import { statusBackgroundColors } from '@/app/_constant';
+import { prisma } from '@/prisma';
 import { formatDate } from '@/lib/help';
-import TaskCardListVeiw from './TaskCardListVeiw';
+import { statusBackgroundColors } from '@/app/_constant';
 import Link from 'next/link';
-
-const TaskModal = async ({
+const TaskModalInEpic = async ({
   task,
-  view,
-  assigneeName,
-  projectId,
+  epic,
 }: {
   task: Task;
-  view: string;
-  assigneeName?: string;
-  projectId: string;
+  epic: Epic | null;
 }) => {
-  const epic = task.epicId
-    ? await prisma.epic.findUnique({
-        where: { id: task.epicId },
-        select: { id: true },
-      })
-    : null;
-
   const assignee = task.assigneeId
     ? await prisma.user.findUnique({
         where: { id: task.assigneeId },
@@ -48,12 +36,7 @@ const TaskModal = async ({
   return (
     <Dialog>
       <DialogTrigger className="w-full">
-        {view === 'list' && (
-          <div className="h-[90px] w-full! relative">
-            <TaskCardListVeiw task={task} assigneeName={assigneeName} />
-          </div>
-        )}
-        {view === 'board' && <TaskCardBoard task={task} />}
+        <TaskCardInEpic task={task} />
       </DialogTrigger>
       <DialogContent className="flex items-start gap-0 min-w-[896px] rounded-lg shadow-[0px_25px_50px_-12px_#00000040]">
         {/* taskId, epicId, title, description, copy link */}
@@ -105,7 +88,7 @@ const TaskModal = async ({
               />
               <p>Copy Link</p>
             </div> */}
-            <Link href={`/project/${projectId}/tasks/${task.id}/update`}>
+            <Link href={`/project/${epic?.projectId}/tasks/${task.id}/update`}>
               <button className="w-fit py-2 px-4 rounded-lg bg-primary-container text-body font-semibold text-white cursor-pointer">
                 Update
               </button>
@@ -184,4 +167,4 @@ const TaskModal = async ({
   );
 };
 
-export default TaskModal;
+export default TaskModalInEpic;

@@ -11,7 +11,7 @@
   --color-primary-container: #0052cc;
 
   /* ===== Surface ===== */
-  --color-surface-highest: #dAe2ff;
+  --color-surface-highest: #dae2ff;
   --color-surface-low: #4f5f7b;
   --color-background: #f9f9ff;
 
@@ -44,7 +44,7 @@
 }
 
 .section_card {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7;
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 w-full ;
 }
 
 .section_skeleton {

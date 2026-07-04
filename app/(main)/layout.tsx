@@ -50,16 +50,13 @@ export default async function RootLayout({
 }>) {
   const user = await getCurrentUser();
 
-  if (!user) {
-    redirect('/signup');
-  }
   return (
     <html lang="en">
       <body
         className={`${josefine.className} min-h-full bg-background grid grid-cols-6`}
       >
         <SidebarDesktop />
-        <Header user={user} />
+        <Header user={user!} />
         {children}
         <Toaster />
       </body>

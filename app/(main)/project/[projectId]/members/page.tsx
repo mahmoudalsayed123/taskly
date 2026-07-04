@@ -6,6 +6,8 @@ import MemberTable from '../../_components/MemberTable';
 import InviteDialogLg from '../../_components/InviteDialogLg';
 import InviteDrawerSm from '../../_components/InviteDrawerSm';
 import { prisma } from '@/prisma';
+import { getCurrentUser } from '@/lib/getCurrentUser';
+import { Role } from '@/app/generated/prisma/enums';
 
 const Members = async ({
   params,
@@ -14,14 +16,7 @@ const Members = async ({
 }) => {
   const { projectId } = await params;
 
-  const projectName = await prisma.project.findUnique({
-    where: {
-      id: projectId,
-    },
-    select: {
-      id: true,
-    },
-  });
+  const currentUser = await getCurrentUser();
 
   const members = await prisma.user.findMany({
     where: {
@@ -41,6 +36,12 @@ const Members = async ({
       role: true,
     },
   });
+
+  const { role: currentUserRole } = memberRole.find(
+    (member) => member.userId === currentUser?.id,
+  ) || {
+    role: '',
+  };
 
   return (
     <>
@@ -81,7 +82,9 @@ const Members = async ({
         {/* Heading Section + Invite Members */}
         <div className="flex items-center justify-center md:justify-between w-full mb-8">
           <MainHeadingSection heading="Project Members" desc={''} />
-          <InviteDialogLg projectId={projectId} />
+          {currentUserRole === Role.ADMIN && (
+            <InviteDialogLg projectId={projectId} />
+          )}
         </div>
         {/* Member table */}
         <MemberTable members={members} memberRole={memberRole} />

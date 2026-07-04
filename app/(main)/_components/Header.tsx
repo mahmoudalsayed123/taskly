@@ -10,6 +10,9 @@ const Header = ({ user }: { user: User }) => {
   const pathName = usePathname();
   const chickPath = pathName.includes('/invite');
 
+  if (!user) {
+    return;
+  }
   return (
     <>
       <header
@@ -22,12 +25,14 @@ const Header = ({ user }: { user: User }) => {
         <div className="md:absolute md:top-1.5 md:right-[225px] flex items-center gap-4">
           <div className="hidden md:block">
             <h2 className="text-body font-semibold text-slate-dark">
-              {user.name}
+              {user?.name}
             </h2>
-            <p className="text-label font-bold text-primary">{user.jobTitle}</p>
+            <p className="text-label font-bold text-primary">
+              {user?.jobTitle}
+            </p>
           </div>
           <button className="w-10 h-10 bg-primary font-bold rounded-lg text-white">
-            {user.name.slice(0, 2).toUpperCase()}
+            {user?.name.slice(0, 2).toUpperCase()}
           </button>
           {/* {user.image ? (
             <Image

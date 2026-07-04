@@ -1,59 +1,106 @@
 import { prisma } from '@/prisma';
 import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 import { getCurrentUser } from '@/lib/getCurrentUser';
 import { Role } from '@/app/generated/prisma/enums';
 
 export async function POST(req: Request) {
   try {
+    //check token is valid and exists
     const { token } = await req.json();
-
-    if (!token) {
+    if (!token || typeof token !== 'string') {
       return NextResponse.json({ error: 'Invalid token' }, { status: 400 });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      email: string;
-      projectId: string;
-    };
-
+    //check user is logged in
     const currentUser = await getCurrentUser();
-
     if (!currentUser) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Login required' }, { status: 401 });
     }
 
-    if (decoded.email !== currentUser.email) {
+    // find invitation by token
+    const invitation = await prisma.invitation.findUnique({
+      where: {
+        token,
+      },
+    });
+
+    if (!invitation)
+      return NextResponse.json(
+        { error: 'Invitation not found' },
+        { status: 404 },
+      );
+
+    // check invitation is expired
+    if (invitation.expiresAt < new Date()) {
+      return NextResponse.json(
+        { error: 'Invitation has expired' },
+        { status: 410 },
+      );
+    }
+
+    //check if invitation is already accepted
+    if (invitation.acceptedAt !== null) {
+      return NextResponse.json({
+        alreadyMember: true,
+        projectId: invitation.projectId,
+      });
+    }
+
+    // check if user already member of this project
+    const member = await prisma.project_Member.findUnique({
+      where: {
+        userId_projectId: {
+          userId: currentUser?.id,
+          projectId: invitation.projectId,
+        },
+      },
+    });
+
+    if (member) {
+      await prisma.invitation.update({
+        where: {
+          id: invitation.id,
+        },
+        data: {
+          acceptedAt: new Date(),
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        projectId: invitation.projectId,
+      });
+    }
+
+    if (currentUser.email !== invitation.email) {
       return NextResponse.json(
         { error: 'This invite belongs to another account' },
         { status: 403 },
       );
     }
 
-    const existingMember = await prisma.project_Member.findFirst({
-      where: {
-        userId: currentUser.id,
-        projectId: decoded.projectId,
-      },
-    });
-
-    if (existingMember) {
-      return NextResponse.json({
-        message: 'Already a member',
+    await prisma.$transaction(async (tx) => {
+      await tx.project_Member.create({
+        data: {
+          userId: currentUser.id,
+          projectId: invitation.projectId,
+          role: Role.MEMBER,
+        },
       });
-    }
 
-    await prisma.project_Member.create({
-      data: {
-        projectId: decoded.projectId,
-        userId: currentUser.id,
-        role: Role.MEMBER,
-      },
+      await tx.invitation.update({
+        where: {
+          id: invitation.id,
+        },
+        data: {
+          acceptedAt: new Date(),
+        },
+      });
     });
 
     return NextResponse.json({
       success: true,
-      projectId: decoded.projectId,
+      projectId: invitation.projectId,
     });
   } catch (error) {
     console.error(error);

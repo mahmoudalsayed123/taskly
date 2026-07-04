@@ -10,6 +10,7 @@ import InviteMembersLg from './InviteMembersLg';
 import BtnInviteMember from '../[projectId]/members/_components/BtnInviteMember';
 
 const InviteDialogLg = ({ projectId }: { projectId: string }) => {
+  
   return (
     <Dialog>
       <DialogTrigger asChild>

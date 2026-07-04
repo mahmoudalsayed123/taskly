@@ -2,28 +2,43 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { signToken } from '@/lib/jwt';
 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
     if (!email || !password)
-      return new Response('Missing required fields', { status: 400 });
+      return NextResponse.json(
+        { message: 'Missing required fields' },
+        { status: 400 },
+      );
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (!user) return new Response('User not found', { status: 404 });
+    if (!user)
+      return NextResponse.json(
+        { message: 'User not found' },
+        {
+          status: 404,
+        },
+      );
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) return new Response('Invalid credentials', { status: 401 });
+    if (!isMatch)
+      return new NextResponse(
+        JSON.stringify({ message: 'Invalid credentials' }),
+        {
+          status: 401,
+        },
+      );
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' },
-    );
+    const token = await signToken({
+      userId: user.id,
+      email: user.email,
+    });
 
     const response = NextResponse.json({
       message: 'Login successful',

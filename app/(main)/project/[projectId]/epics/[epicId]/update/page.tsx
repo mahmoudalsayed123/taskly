@@ -3,7 +3,6 @@ import MainHeadingSection from '../../../../_components/MainHeadingSection';
 import FormUpdateEpic from '../../_components/FormUpdateEpic';
 import { prisma } from '@/prisma';
 
-
 const UpdateEpic = async ({
   params,
 }: {
@@ -47,11 +46,7 @@ const UpdateEpic = async ({
           desc={`Refine your epic details, adjust the timeline, or reassign ownership to keep your project on track.`}
         />
       </div>
-      <FormUpdateEpic
-        epic={epic}
-        assignedUser={assignedUser}
-        members={members}
-      />
+      <FormUpdateEpic epic={epic} members={members} />
     </section>
   );
 };

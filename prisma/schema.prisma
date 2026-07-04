@@ -26,6 +26,7 @@ model User {
   projectMembers Project_Member[]
   rePorterTasks  Task[]           @relation("RePorter")
   assigneeTasks  Task[]           @relation("Assignee")
+  invitations    Invitation[]
 }
 
 model Project {
@@ -39,6 +40,7 @@ model Project {
   epics          Epic[]
   projectMembers Project_Member[]
   tasks          Task[]
+  invitations    Invitation[]
 }
 
 // العضويه
@@ -89,6 +91,29 @@ model Task {
   epic     Epic?   @relation(fields: [epicId], references: [id])
   assignee User?   @relation("Assignee", fields: [assigneeId], references: [id])
   rePorter User?   @relation("RePorter", fields: [rePorterId], references: [id])
+}
+
+model Invitation {
+  id String @id @default(cuid())
+
+  email String
+
+  token String @unique
+
+  projectId String
+
+  invitedById String
+
+  createdAt DateTime @default(now())
+
+  expiresAt DateTime
+
+  acceptedAt DateTime?
+
+  project   Project @relation(fields: [projectId], references: [id])
+  invitedBy User    @relation(fields: [invitedById], references: [id])
+
+  @@unique([email, projectId])
 }
 
 enum TaskStatus {

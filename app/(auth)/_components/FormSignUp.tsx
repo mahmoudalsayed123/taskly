@@ -73,9 +73,6 @@ const FormSignUp = () => {
         toast.error(data.error || 'Something went wrong');
         return;
       }
-
-      // redirect after signup
-      const redirect = searchParams.get('redirect');
       // reset form
       setFormData({
         name: '',
