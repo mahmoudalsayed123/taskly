@@ -9,7 +9,13 @@ import { Task } from '@/app/generated/prisma/client';
 import { prisma } from '@/prisma';
 import TaskModal from './TaskModal';
 
-const TasksTable = ({ tasks }: { tasks: Task[] }) => {
+const TasksTable = ({
+  tasks,
+  projectId,
+}: {
+  tasks: Task[];
+  projectId: string;
+}) => {
   return (
     <Table>
       <TableHeader>
@@ -55,6 +61,7 @@ const TasksTable = ({ tasks }: { tasks: Task[] }) => {
           return (
             <TaskModal
               key={task.id}
+              projectId={projectId}
               task={task}
               view={'list'}
               assigneeName={assigneeName || 'Unassigned'}

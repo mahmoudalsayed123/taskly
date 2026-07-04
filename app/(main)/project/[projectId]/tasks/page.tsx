@@ -96,7 +96,7 @@ const Tasks = async ({
         {view === 'board' ? (
           <BoardViewTasks groupedTasks={groupedTasks} projectId={projectId} />
         ) : (
-          <TasksTable tasks={tasks} />
+          <TasksTable tasks={tasks} projectId={projectId} />
         )}
 
         {view === 'list' && (
